@@ -5,6 +5,7 @@ import * as logger from 'morgan';
 
 import { connectServerInDatabase } from './config/db';
 import { routerItem } from './routes/item';
+import { itemErrorHandler } from './errors/ItemErrorHandler';
 
 export const app = express();
 
@@ -17,3 +18,5 @@ app.use(logger('dev'));
 connectServerInDatabase();
 
 app.use('/item', routerItem);
+
+app.use(itemErrorHandler);

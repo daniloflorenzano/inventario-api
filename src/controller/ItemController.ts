@@ -1,29 +1,47 @@
-import { AppDataSource } from '../data-source';
-import { Item } from '../entity/Item';
+import { Request, Response } from 'express';
+import { ItemError } from '../errors/ItemError';
+import { ItemRepository } from '../repository/Item';
+import { ItemService } from '../services/ItemService';
+
+const Service = new ItemService();
+
+interface IItem extends Array<IItem> {
+	descricao: string;
+	local: string;
+	estado: string;
+	codigo: number;
+	observacao: string;
+}
 
 export class ItemController {
-	async createItem(item: Item) {
-		const createdItem = await AppDataSource.manager.save(item);
-		return createdItem;
+	async createItem(req: Request, res: Response) {
+		const data: IItem = req.body;
+		const item = await Service.createItem(data);
+
+		if (item instanceof ItemError) {
+			res.status(item.code).json(item.message);
+		}
+
+		res.status(201).json(item);
 	}
 
 	async getItems() {
-		const items = await AppDataSource.manager.find(Item);
+		const items = await ItemRepository.find();
 		return items;
 	}
 
 	async getItemByCode(codigo: number) {
-		const item = await AppDataSource.manager.findOneBy(Item, {
+		const item = await ItemRepository.findOneBy({
 			codigo: codigo,
 		});
 		return item;
 	}
 
 	async updateItem(data: {}, id: number) {
-		await AppDataSource.manager.update(Item, id, data);
+		await ItemRepository.update(id, data);
 	}
 
 	async deleteItem(id: number) {
-		await AppDataSource.manager.delete(Item, { id: id });
+		await ItemRepository.delete({ id: id });
 	}
 }
