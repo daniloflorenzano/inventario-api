@@ -1,28 +1,20 @@
 import { Request, Response } from 'express';
+import { Item } from '../entity/Item';
 import { ItemError } from '../errors/ItemError';
 import { ItemRepository } from '../repository/Item';
 import { ItemService } from '../services/ItemService';
 
 const Service = new ItemService();
 
-interface IItem extends Array<IItem> {
-	descricao: string;
-	local: string;
-	estado: string;
-	codigo: number;
-	observacao: string;
-}
-
 export class ItemController {
 	async createItem(req: Request, res: Response) {
-		const data: IItem = req.body;
+		const data: Item = req.body;
 		const item = await Service.createItem(data);
+		let code = 201
 
-		if (item instanceof ItemError) {
-			res.status(item.code).json(item.message);
-		}
+		item instanceof ItemError ? code = item.code : null;
 
-		res.status(201).json(item);
+		res.status(code).json(item);
 	}
 
 	async getItems() {
@@ -37,11 +29,11 @@ export class ItemController {
 		return item;
 	}
 
-	async updateItem(data: {}, id: number) {
+	async updateItem(data: {}, id: string) {
 		await ItemRepository.update(id, data);
 	}
 
-	async deleteItem(id: number) {
+	async deleteItem(id: string) {
 		await ItemRepository.delete({ id: id });
 	}
 }

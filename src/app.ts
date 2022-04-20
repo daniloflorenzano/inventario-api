@@ -5,7 +5,8 @@ import * as logger from 'morgan';
 
 import { connectServerInDatabase } from './config/db';
 import { routerItem } from './routes/item';
-import { itemErrorHandler } from './errors/ItemErrorHandler';
+import { Request, Response } from 'express';
+import { ItemError } from './errors/ItemError';
 
 export const app = express();
 
@@ -19,4 +20,10 @@ connectServerInDatabase();
 
 app.use('/item', routerItem);
 
-app.use(itemErrorHandler);
+app.use((err: Error, req: Request, res: Response) => {
+    if (err instanceof ItemError) {
+        console.log('entrou no erro')
+        return res.status(err.code).json({message: err.message});
+    }
+    res.status(500).json({message: 'Internal Server Error'});
+});

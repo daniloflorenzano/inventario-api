@@ -1,35 +1,22 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, Column, PrimaryColumn, Generated } from 'typeorm';
 
 @Entity()
 export class Item {
-	constructor(
-		descricao: string,
-		local: string,
-		estado: string,
-		codigo: number,
-		observacao: string
-	) {
-		this.descricao = descricao;
-		this.local = local;
-		this.estado = estado;
-		this.codigo = codigo;
-		this.observacao = observacao;
-	}
-
-	@PrimaryGeneratedColumn()
-	id: number;
+	@PrimaryColumn()
+	@Generated('uuid')
+	readonly id!: string;
 
 	@Column()
-	descricao: string;
+	descricao!: string;
 
 	@Column()
-	local: string;
+	local!: string;
 
 	@Column()
-	estado: string;
+	estado!: string;
 
 	@Column()
-	codigo: number;
+	codigo!: number;
 
 	@Column()
 	observacao: string;
