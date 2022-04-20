@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { ItemController } from '../controller/ItemController';
-import { Item } from '../entity/Item';
 
 export const routerItem = Router();
 const itemCtrl = new ItemController();

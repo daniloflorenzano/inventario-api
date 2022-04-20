@@ -7,6 +7,7 @@ import { connectServerInDatabase } from './config/db';
 import { routerItem } from './routes/item';
 import { Request, Response } from 'express';
 import { ItemError } from './errors/ItemError';
+import { routerUsuario } from './routes/usuario';
 
 export const app = express();
 
@@ -19,10 +20,10 @@ app.use(logger('dev'));
 connectServerInDatabase();
 
 app.use('/item', routerItem);
+app.use('/usuario', routerUsuario);
 
 app.use((err: Error, req: Request, res: Response) => {
     if (err instanceof ItemError) {
-        console.log('entrou no erro')
         return res.status(err.code).json({message: err.message});
     }
     res.status(500).json({message: 'Internal Server Error'});

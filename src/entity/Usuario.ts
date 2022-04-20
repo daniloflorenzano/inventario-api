@@ -1,19 +1,28 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, Column, Generated, PrimaryColumn, CreateDateColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Usuario {
-	@PrimaryGeneratedColumn()
-	id: number;
+	@PrimaryColumn()
+	@Generated('uuid')
+	readonly id!: string;
 
 	@Column()
-	nome: string;
+	nome!: string;
 
 	@Column()
-	sobrenome: string;
+	sobrenome!: string;
 
 	@Column()
-	cargo: string;
+	email!: string;
+
+	@Exclude()
+	@Column()
+	senha!: string;
 
 	@Column()
-	email: string;
+	admin!: boolean;
+
+	@CreateDateColumn()
+	criadoEm: string;
 }

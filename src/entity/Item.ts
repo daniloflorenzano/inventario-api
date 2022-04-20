@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, Generated } from 'typeorm';
+import { Entity, Column, PrimaryColumn, Generated, CreateDateColumn } from 'typeorm';
 
 @Entity()
 export class Item {
@@ -20,4 +20,7 @@ export class Item {
 
 	@Column()
 	observacao: string;
+
+	@CreateDateColumn()
+	criadoEm: string;
 }
