@@ -14,4 +14,14 @@ export class UsuarioService {
 
 		return createdUser;
 	}
+
+	async getUsers() {
+		const users = await UsuarioRepository.find();
+		return users;
+	}
+
+	async getUserById(id: string) {
+		const user = await UsuarioRepository.findOneBy({ id: id });
+		return user;
+	}
 }
