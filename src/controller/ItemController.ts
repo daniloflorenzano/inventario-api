@@ -10,30 +10,42 @@ export class ItemController {
 	async createItem(req: Request, res: Response) {
 		const data: Item = req.body;
 		const item = await Service.createItem(data);
-		let code = 201
 
-		item instanceof ItemError ? code = item.code : null;
+		if (item instanceof ItemError) {
+			return res.status(item.code).json({ message: item.message });
+		}
 
-		res.status(code).json(item);
+		return res.status(201).json(item);
 	}
 
-	async getItems() {
-		const items = await ItemRepository.find();
-		return items;
+	async getItems(req: Request, res: Response) {
+		const items = await Service.getItems();
+
+		return res.status(200).json(items);
 	}
 
-	async getItemByCode(codigo: number) {
-		const item = await ItemRepository.findOneBy({
-			codigo: codigo,
-		});
-		return item;
+	async getItemByCode(req: Request, res: Response) {
+		const codigo = parseInt(req.params.codigoItem);
+		const item = await Service.getItemByCode(codigo);
+
+		if (item instanceof ItemError) {
+			return res.status(item.code).json({ message: item.message });
+		}
+
+		return res.status(200).json(item);
 	}
 
-	async updateItem(data: {}, id: string) {
-		await ItemRepository.update(id, data);
+	async updateItem(req: Request, res: Response) {
+		const id = req.params.id;
+		const data: {} = req.body;
+		const updatedItem = await Service.updateItem(id, data);
+
+		return res.status(200).json(updatedItem);
 	}
 
-	async deleteItem(id: string) {
-		await ItemRepository.delete({ id: id });
+	async deleteItem(req: Request, res: Response) {
+		const id = req.params.id;
+		const deletedItem = Service.deleteItem(id);
+		return res.status(204).json(deletedItem);
 	}
 }

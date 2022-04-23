@@ -18,12 +18,32 @@ export class ItemService {
 
 		for (const [key, value] of Object.entries(item)) {
 			if (key !== 'observacao' && value.length === 0) {
-				return ItemError.emptyField(key.toUpperCase());
+				return ItemError.emptyField(key);
 			}
 		}
 
-		const createdItem = await ItemRepository.save(item);
+		return await ItemRepository.save(item);
+	}
 
-		return createdItem;
+	async getItems() {
+		return await ItemRepository.find();
+	}
+
+	async getItemByCode(codigo: number) {
+		const item = await ItemRepository.findOneBy({
+			codigo: codigo,
+		});
+
+		if (!item) return ItemError.ItemNotFound(codigo);
+
+		return item;
+	}
+
+	async updateItem(id: string, data: {}) {
+		return await ItemRepository.update(id, data);
+	}
+
+	async deleteItem(id: string) {
+		return await ItemRepository.delete({ id: id });
 	}
 }

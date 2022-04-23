@@ -5,13 +5,8 @@ export const routerUsuario = Router();
 const usuarioCtrl = new UsuarioController();
 
 routerUsuario
-	.post('/', async (req, res) => {
-		usuarioCtrl.createUser(req, res);
-	})
-	.get('/', async (req, res) => {
-		usuarioCtrl.getUsers(req, res);
-	})
-	.get('/:id', async (req, res) => {
-		const id = req.params.id;
-		return usuarioCtrl.getUserById(req, res, id);
-	});
+	.get('/', usuarioCtrl.getUsers)
+	.get('/:id', usuarioCtrl.getUserById)
+	.post('/', usuarioCtrl.createUser)
+	.put('/:id', usuarioCtrl.updateUser)
+	.delete('/:id', usuarioCtrl.deleteUser);

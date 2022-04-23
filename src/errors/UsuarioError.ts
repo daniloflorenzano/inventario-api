@@ -1,4 +1,4 @@
-export class ItemError {
+export class UsuarioError {
 	code: number;
 	message: string;
 
@@ -7,18 +7,18 @@ export class ItemError {
 		this.code = code;
 	}
 
-	static codeAlreadyExists() {
-		return new ItemError('Código já registrado.', 400);
+	static userAlreadyExists() {
+		return new UsuarioError('Usuario ja cadastrado', 400);
+	}
+
+	static userNotFound() {
+		return new UsuarioError('Usuario nao encontrado', 404);
 	}
 
 	static emptyField(field: string) {
-		return new ItemError(
+		return new UsuarioError(
 			`O campo ${field.toUpperCase()} não pode estar vazio.`,
 			400
 		);
-	}
-
-	static ItemNotFound(itemCode: number) {
-		return new ItemError(`Item ${itemCode} nao encontrado.`, 404);
 	}
 }
