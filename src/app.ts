@@ -6,9 +6,9 @@ import * as logger from 'morgan';
 import { connectServerInDatabase } from './config/db';
 import { routerItem } from './routes/item';
 import { Request, Response, NextFunction } from 'express';
-import { ItemError } from './errors/ItemError';
 import { routerUsuario } from './routes/usuario';
-import { UsuarioError } from './errors/UsuarioError';
+
+import createHttpError = require('http-errors');
 
 export const app = express();
 
@@ -23,9 +23,16 @@ connectServerInDatabase();
 app.use('/item', routerItem);
 app.use('/usuario', routerUsuario);
 
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-	if (err instanceof ItemError || err instanceof UsuarioError) {
-		return res.status(err.code).json({ message: err.message });
+app.use(
+	(
+		err: createHttpError.HttpError,
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) => {
+		if (err instanceof createHttpError.HttpError) {
+			return res.status(err.statusCode).json({ message: err.message });
+		}
+		res.status(500).json({ message: 'Internal Server Error' });
 	}
-	res.status(500).json({ message: 'Internal Server Error' });
-});
+);

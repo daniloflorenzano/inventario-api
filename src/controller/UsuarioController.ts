@@ -1,58 +1,57 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { Usuario } from '../entity/Usuario';
 import { UsuarioService } from '../services/UsuarioService';
 import { instanceToPlain } from 'class-transformer';
-import { UsuarioError } from '../errors/UsuarioError';
 
 const Service = new UsuarioService();
 
 export class UsuarioController {
-	async createUser(req: Request, res: Response) {
+	async createUser(req: Request, res: Response, next: NextFunction) {
 		const data: Usuario = req.body;
-		const user = await Service.createUser(data);
-
+		const user = await Service.createUser(data, next);
 		const userSend = instanceToPlain(user);
 
-		if (user instanceof UsuarioError) {
-			return res.status(user.code).json({ message: user.message });
+		// se for lancado um erro em alguma validacao, "user" se torna void
+		if (user !== void 0) {
+			return res.status(201).json(userSend);
 		}
-
-		return res.status(201).json(userSend);
 	}
 
 	async getUsers(req: Request, res: Response) {
 		const users = await Service.getUsers();
-		let code = 201;
-
 		const userSend = instanceToPlain(users);
 
-		res.status(code).json(userSend);
+		if (users !== void 0) {
+			res.status(200).json(userSend);
+		}
 	}
 
-	async getUserById(req: Request, res: Response) {
+	async getUserById(req: Request, res: Response, next: NextFunction) {
 		const id = req.params.id;
-		const user = await Service.getUserById(id);
+		const user = await Service.getUserById(id, next);
 		const userSend = instanceToPlain(user);
 
-		if (user instanceof UsuarioError) {
-			res.status(user.code).json({ message: user.message });
+		if (user !== void 0) {
+			res.status(200).json(userSend);
 		}
-
-		res.status(200).json(userSend);
 	}
 
-	async updateUser(req: Request, res: Response) {
+	async updateUser(req: Request, res: Response, next: NextFunction) {
 		const id = req.params.id;
 		const data: {} = req.body;
-		const updatedUser = await Service.updateUser(id, data);
+		const updatedUser = await Service.updateUser(id, data, next);
 
-		return res.status(200).json(updatedUser);
+		if (updatedUser !== void 0) {
+			return res.status(200).json(updatedUser);
+		}
 	}
 
-	async deleteUser(req: Request, res: Response) {
+	async deleteUser(req: Request, res: Response, next: NextFunction) {
 		const id = req.params.id;
-		const deletedUser = await Service.deleteUser(id);
+		const deletedUser = await Service.deleteUser(id, next);
 
-		return res.status(204).json(deletedUser);
+		if (deletedUser !== void 0) {
+			return res.status(204).json(deletedUser);
+		}
 	}
 }
