@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Usuario } from '../entity/Usuario';
-import { UsuarioService } from '../services/UsuarioService';
+import { UsuarioService } from '../service/UsuarioService';
 import { instanceToPlain } from 'class-transformer';
 
 const Service = new UsuarioService();

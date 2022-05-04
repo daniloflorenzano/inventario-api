@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Item } from '../entity/Item';
-import { ItemService } from '../services/ItemService';
+import { ItemService } from '../service/ItemService';
 
 const Service = new ItemService();
 

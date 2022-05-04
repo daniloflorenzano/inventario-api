@@ -4,9 +4,9 @@ import * as cors from 'cors';
 import * as logger from 'morgan';
 
 import { connectServerInDatabase } from './config/db';
-import { routerItem } from './routes/item';
+import { routerItem } from './route/item';
 import { Request, Response, NextFunction } from 'express';
-import { routerUsuario } from './routes/usuario';
+import { routerUsuario } from './route/usuario';
 
 import createHttpError = require('http-errors');
 
