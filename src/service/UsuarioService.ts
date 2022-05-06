@@ -2,6 +2,7 @@ import { validate } from 'uuid';
 import { UsuarioRepository } from '../repository/usuario';
 import { NotFound, BadRequest } from 'http-errors';
 import { NextFunction } from 'express';
+import * as bcrypt from 'bcryptjs';
 
 interface IUser {
 	nome: string;
@@ -28,6 +29,8 @@ export class UsuarioService {
 				);
 		}
 
+		usuario.senha = bcrypt.hashSync(usuario.senha, 8);
+
 		return UsuarioRepository.save(usuario);
 	}
 
@@ -45,8 +48,10 @@ export class UsuarioService {
 		return user;
 	}
 
-	async updateUser(id: string, data: {}, next: NextFunction) {
+	async updateUser(id: string, data, next: NextFunction) {
 		if (!validate(id)) return next(new NotFound('ID invalido'));
+
+		if (data.senha) data.senha = bcrypt.hashSync(data.senha, 8);
 
 		return await UsuarioRepository.update(id, data);
 	}

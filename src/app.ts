@@ -9,6 +9,9 @@ import { Request, Response, NextFunction } from 'express';
 import { routerUsuario } from './route/usuario';
 
 import createHttpError = require('http-errors');
+import { AuthController } from './controller/AuthController';
+
+import { authMiddleware } from './middlewares/authMiddleware';
 
 export const app = express();
 
@@ -20,8 +23,9 @@ app.use(logger('dev'));
 
 connectServerInDatabase();
 
-app.use('/item', routerItem);
-app.use('/usuario', routerUsuario);
+app.use('/item', authMiddleware, routerItem);
+app.use('/usuario', authMiddleware, routerUsuario);
+app.use('/auth', AuthController.authenticate)
 
 app.use(
 	(

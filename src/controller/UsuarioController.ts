@@ -38,7 +38,7 @@ export class UsuarioController {
 
 	async updateUser(req: Request, res: Response, next: NextFunction) {
 		const id = req.params.id;
-		const data: {} = req.body;
+		const data = req.body;
 		const updatedUser = await Service.updateUser(id, data, next);
 
 		if (updatedUser !== void 0) {
