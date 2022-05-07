@@ -39,7 +39,7 @@ export class UsuarioService {
 	}
 
 	async getUserById(id: string, next: NextFunction) {
-		if (!validate(id)) return next(new NotFound('ID invalido'));
+		if (!validate(id)) return next(new NotFound('Formato de ID invalido'));
 
 		const user = await UsuarioRepository.findOneBy({ id: id });
 
